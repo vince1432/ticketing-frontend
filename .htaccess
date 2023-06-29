@@ -1,0 +1,4 @@
+# for .htaccess
+# RewriteEngineOn
+# RewriteCond 5{REQUEST_URI} !^/public/
+# RewriteRule ^(.*)$ /public/$1 [L,QSA]

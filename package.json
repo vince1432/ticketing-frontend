@@ -4,12 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port=3000",
+    "dev": "vite --host --port=3000",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.4.0",
+    "js-cookie": "^3.0.5",
+    "sweetalert2": "^11.7.12",
     "vue": "^3.2.47",
     "vue-router": "^4.2.1",
     "vuex": "^4.0.2"

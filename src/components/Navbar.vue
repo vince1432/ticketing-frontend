@@ -1,10 +1,17 @@
 <template>
   <header>
     <nav class="nav">
-      <h3>Vue app</h3>
+      <h3>Vue appss</h3>
       <ul class="nav-routes">
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
+        <router-link class="nav-routes__items" :to="{ name: 'home' }"
+          >Home</router-link
+        >
+        <router-link class="nav-routes__items" :to="{ name: 'about' }"
+          >About</router-link
+        >
+        <router-link class="nav-routes__items" :to="{ name: 'login' }"
+          >Login</router-link
+        >
       </ul>
     </nav>
   </header>
