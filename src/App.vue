@@ -1,16 +1,16 @@
 <script setup>
-import { inject } from 'vue'
-import Navbar from './components/Navbar.vue'
-
-const $http = inject('$http')
-const $store = inject('$store')
+import Layout from './components/Layout.vue'
 </script>
 
 <template>
   <div class="container">
-    <Navbar />
-    <router-view></router-view>
+    <Layout />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+  height: 100vh;
+  background-color: #f9fbfc;
+}
+</style>
