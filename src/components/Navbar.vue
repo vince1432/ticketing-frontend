@@ -3,15 +3,11 @@
     <nav class="nav">
       <h3>Vue appss</h3>
       <ul class="nav-routes">
-        <router-link class="nav-routes__items" :to="{ name: 'home' }"
-          >Home</router-link
-        >
-        <router-link class="nav-routes__items" :to="{ name: 'about' }"
-          >About</router-link
-        >
-        <router-link class="nav-routes__items" :to="{ name: 'login' }"
-          >Login</router-link
-        >
+        <router-link class="nav-routes__items" :to="{ name: 'dashboard' }">Home</router-link>
+        <router-link class="nav-routes__items" :to="{ name: 'about' }">About</router-link>
+        <router-link class="nav-routes__items" :to="{ name: 'ticket' }">Tickets</router-link>
+        <router-link v-if="!token" class="nav-routes__items" :to="{ name: 'login' }">Login</router-link>
+        <router-link v-else class="nav-routes__items" :to="{ name: 'login' }">User</router-link>
       </ul>
     </nav>
   </header>

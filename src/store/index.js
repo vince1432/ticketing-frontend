@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import vuexPersister from '../utils/vuexPersister'
 import actions from './actions'
 import getters from './getters'
 import mutations from './mutations'
@@ -9,6 +10,7 @@ const store = createStore({
   actions,
   mutations,
   getters,
+	plugins: [vuexPersister.persist]
 })
 
 export default store
