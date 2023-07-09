@@ -44,8 +44,9 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import TextBox from '../components/TextBox.vue';
+import store from '../store';
 import { login } from '../utils/api';
 import { serverError } from '../utils/sweetAlert';
 
@@ -54,7 +55,6 @@ const router = useRouter();
 const username = ref('')
 const password = ref('')
 const error = reactive({})
-const route = useRoute();
 
 const userLogin = async () => {
 
@@ -71,8 +71,8 @@ const userLogin = async () => {
       console.log(data, 'success')
 			localStorage.token = data.data.token
 			localStorage.refresh_token = data.data.refresh_token
-
-			router.push({ path: 'home' })
+			store.dispatch('login', data.data.user);
+			router.push({ name: 'dashboard' })
     })
     .catch(function ({ response }) {
 			if(response.status === 401)

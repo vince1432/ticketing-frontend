@@ -11,8 +11,8 @@ import Navbar from './Navbar.vue';
 
 const router = useRouter();
 const route = useRoute();
-console.log(router);
-console.log(route, route.name);
+// console.log(router);
+// console.log(route, route.name);
 </script>
 
 <style scoped></style>
