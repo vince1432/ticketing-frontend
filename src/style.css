@@ -35,3 +35,26 @@ body {
 .action-col__btn-icon:hover {
 	cursor: pointer;
 }
+
+.swal-toast__container {
+	padding: 0px;
+}
+
+.table-top {
+	display: flex;
+  align-items: center;
+  justify-content:space-between;
+	width: 100%;
+}
+
+.table-top__title {
+	font-size: 20px;
+}
+
+/* .table-top__button {
+	col
+} */
+
+.table-top__button:hover {
+	cursor: pointer;
+}

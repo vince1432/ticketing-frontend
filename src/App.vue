@@ -1,5 +1,5 @@
 <script setup>
-import Layout from './components/Layout.vue'
+import Layout from './components/Layout.vue';
 </script>
 
 <template>
@@ -10,7 +10,7 @@ import Layout from './components/Layout.vue'
 
 <style scoped>
 .container {
-  height: 100vh;
+  height: 100%;
   background-color: #f9fbfc;
 }
 </style>

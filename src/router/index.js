@@ -25,6 +25,30 @@ const routes = [
       hideForAuth: true
     },
   },
+  {
+    path: '/ticket',
+    name: 'ticket',
+    component: () => import('./../views/Ticket/Ticket.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/ticket/:ticket',
+    name: 'ticket-details',
+    component: () => import('./../views/Ticket/TicketDetails.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/ticket/create',
+    name: 'ticket-create',
+    component: () => import('./../views/Ticket/TicketDetails.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
 ]
 
 const router = createRouter({
