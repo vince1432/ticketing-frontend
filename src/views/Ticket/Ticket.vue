@@ -6,6 +6,12 @@
 			separator="cell"
 			:rows="tickets"
 			row-key="id"
+			dense
+			:loading="isLoading"
+			:pagination="pagination"
+			:rows-per-page-options="rowsPerPageOption"
+			:onRequest="tableRequest"
+			@update:pagination="paginationUpdate"
 		>
 			<template v-slot:top>
 				<div class="table-top">
@@ -24,7 +30,7 @@
 						{{ props.row.id }}
 					</q-td>
 					<q-td key="title" :props="props">
-						{{ props.row.title }} .
+						{{ props.row.title }}
 					</q-td>
 					<q-td key="assigned_to" :props="props">
 						<span v-if="props.row.assigned_to.name">
@@ -44,12 +50,12 @@
 							color="primary"
 							@click="router.push({ name: 'ticket-details', params: { ticket: props.row.id}})"
 							/>
-						<q-icon
+						<!-- <q-icon
 							name="fa-sharp fa-solid fa-trash fa-lg"
 							class="action-col__btn-icon"
 							color="negative"
-							@click="router.push({ name: 'ticket-details', params: { ticket: props.row.id}})"
-						/>
+							@click="TicketClose(props.row.id)"
+						/> -->
 					</q-td>
 				</q-tr>
 			</template>
@@ -62,9 +68,18 @@ import { useRouter } from 'vue-router';
 import apiError from '../../composables/apiErrorComposable';
 import { getTickets } from '../../utils/api';
 
-let tickets = ref([]);
 const router = useRouter();
 const { handle } = apiError();
+
+let tickets = ref([]);
+let isLoading = ref(false);
+let rowsPerPageOption = ref(['10',	'20',	'50','100',]);
+let pagination = ref({
+	descending: true,
+	page: 1,
+	rowPerPage: 0,
+	rowsNumber: 10
+});
 
 const columns = [
   { name: 'id', label: 'ID', align: 'center', field: row => row.id, sortable: true },
@@ -76,18 +91,65 @@ const columns = [
 ];
 
 onMounted(() => {
-	TicketList();
+	if(tickets.value.length === 0)
+		TicketList();
 })
 
-const  TicketList = () => {
-	getTickets()
+const paginationUpdate = (props) => {
+	const { sortBy, descending, page, rowsPerPage, rowPerPage, rowsNumber } = props
+
+	pagination.value.page = page
+	pagination.value.rowsPerPage = rowsPerPage
+	pagination.value.sortBy = sortBy
+	pagination.value.descending = descending
+	pagination.value.rowsNumber = rowsNumber
+	pagination.value.rowPerPage = rowPerPage
+}
+
+const tableRequest = (props) => {
+		const { page, rowsPerPage, sortBy, descending } = props.pagination
+
+		TicketList(rowsPerPage, page);
+		// update local pagination object
+		pagination.value.page = page
+		pagination.value.rowsPerPage = rowsPerPage
+		pagination.value.sortBy = sortBy
+		pagination.value.descending = descending
+}
+
+const TicketList = (itemCount = 0, page = 1) => {
+	isLoading.value = true;
+
+	if(!itemCount)
+		itemCount = pagination.value.rowsNumber;
+	if(!page)
+		page = pagination.value.page;
+
+	getTickets(itemCount, page)
 		.then(function ({ data }) {
 				tickets.value = data.data
+				pagination.value.rowsNumber = data.total
 			})
 			.catch(function ({ response }) {
 					handle(response)
 			})
+			.finally(function () {
+				isLoading.value = false;
+			})
 }
+
+// const TicketClose = (id) => {
+// 	deleteTicket(id)
+// 		.then(function ({ data }) {
+// 			successToast(`Ticket deleted successfuly`, `Ticket #${data.data.id}`)
+// 		})
+// 		.catch(function ({ response }) {
+// 				handle(response)
+// 		})
+// 		.finally(function () {
+// 			isLoading.value = false;
+// 		})
+// }
 </script>
 
 <style lang="scss" scoped>

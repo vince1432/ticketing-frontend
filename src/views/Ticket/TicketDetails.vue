@@ -47,6 +47,7 @@
 			</div>
 			<div class="q-gutter-md">
 				<q-btn :label="btnText" type="button" color="primary" :loading="btnLoading" @click="onSubmit()"/>
+				<!-- <q-btn v-if="btnText === 'Update'" label="Close" type="button" color="red" :loading="btnLoading" @click="TicketClose()"/> -->
 				<q-btn label="Cancel" type="button" color="negative" flat class="q-ml-sm" @click="router.push({ name: 'ticket' })"/>
 			</div>
 		</q-form>
@@ -68,18 +69,19 @@ const { handle } = apiError();
 const { users, updateUserList } = userComposable();
 
 const ticketID = route.params.ticket;
-const isCreate =  (route.path === '/ticket/create');
+let isCreate =  ref(route.path === '/ticket/create');
 let ticket = ref({});
 let ticketPriorities = ref([]);
 let btnLoading = ref(false);
-let btnText = "";
+let btnText = ref("Create");
 
 // set button text
-btnText = (isCreate) ? 'Create' : 'Update';
+btnText.value = (isCreate.value) ? 'Create' : 'Update';
 
 onMounted(() => {
 	// dont call if the page is for creating ticket
-	if(!isCreate)
+	console.log('test');
+	if(!isCreate.value)
 		TicketDetails()
 	TicketPriorities()
 	updateUserList()
@@ -89,13 +91,58 @@ onMounted(() => {
 const onSubmit = () => {
 	btnLoading.value = true;
 
-	if(isCreate)
+	if(isCreate.value)
 		TicketAdd(ticket.value)
 	else
 		TicketUpdate(ticketID, ticket.value)
 }
 
 // ----------- tickets api call -----------//
+
+// ticket create
+const TicketAdd = (data) => {
+	createTicket(data)
+			.then(function ({ data }) {
+				router.push({ name: 'ticket-details', params: { ticket: data.data.id}})
+				isCreate.value = false
+				btnText.value = "Update"
+				successToast(`Ticket created successfuly`, `Ticket #${data.data.id}`)
+			})
+			.catch(function ({ response }) {
+				handle(response)
+			})
+			.finally(() => {
+				btnLoading.value = false;
+			});
+}
+
+// ticket update
+const TicketUpdate = (id, data) => {
+	updateTicket(id, data)
+			.then(function ({ data }) {
+				successToast("Ticket updated successfuly")
+			})
+			.catch(function (response) {
+				handle(response)
+			})
+			.finally(() => {
+				btnLoading.value = false;
+			});
+}
+
+// // ticket close
+// const TicketClose = (id) => {
+// 	closeTicket(id)
+// 			.then(function ({ data }) {
+// 				successToast("Ticket closed successfuly")
+// 			})
+// 			.catch(function (response) {
+// 				handle(response)
+// 			})
+// 			.finally(() => {
+// 				btnLoading.value = false;
+// 			});
+// }
 
 // ticket details
 const TicketDetails = () => {
@@ -119,34 +166,6 @@ const TicketPriorities = () => {
 			.catch(function ({ response }) {
 				handle(response)
 			})
-}
-
-// ticket create
-const TicketAdd = (data) => {
-	createTicket(data)
-			.then(function ({ data }) {
-				router.push({ name: 'ticket-details', params: { ticket: data.data.id}})
-				successNotif()
-			})
-			.catch(function ({ response }) {
-				handle(response)
-			})
-			.finally(() => {
-				btnLoading.value = false;
-			});
-}
-// ticket update
-const TicketUpdate = (id, data) => {
-	updateTicket(id, data)
-			.then(function ({ data }) {
-				successToast("Ticket updated successfuly")
-			})
-			.catch(function (response) {
-				handle(response)
-			})
-			.finally(() => {
-				btnLoading.value = false;
-			});
 }
 </script>
 

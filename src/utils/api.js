@@ -22,6 +22,10 @@ export const createTicket = (data) => {
   return http.post(`/ticket`, data)
 }
 
+// export const closeTicket = (id) => {
+//   return http.patch(`/ticket/close/${id}`)
+// }
+
 export const updateTicket = (id, data) => {
   return http.patch(`/ticket/${id}`, data)
 }
