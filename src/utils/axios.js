@@ -1,17 +1,26 @@
 import axios from 'axios';
 
-const token = localStorage.getItem("token");
-
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     "Accept": "application/json",
     "Content-Type": "application/json",
-		timeout: 1000,
-		'Authorization': `Bearer ${token}`
+		timeout: 1000
   },
-  // withCredentials: true,
 })
+
+// console.log(token);
+
+http.interceptors.request.use(
+  function(config) {
+    const token = localStorage.getItem("token");
+    if (token)
+      config.headers["Authorization"] = `Bearer ${token}`;
+
+    return config;
+  },
+  error => Promise.reject(error)
+);
 
 // const onRequest = (config) => {
 //   const methods = ['post', 'put', 'delete']
