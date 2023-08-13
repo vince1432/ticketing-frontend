@@ -27,36 +27,6 @@
 			<template v-slot:body="props">
 				<slot v-bind="props" name="columns"></slot>
 			</template>
-			<!-- <template v-slot:body="props">
-				<q-tr :props="props">
-					<q-td key="id" :props="props">
-						{{ props.row.id }}
-					</q-td>
-					<q-td key="title" :props="props">
-						{{ props.row.title }}
-					</q-td>
-					<q-td key="assigned_to" :props="props">
-						<span v-if="props.row.assigned_to.name">
-							{{ props.row.assigned_to.name}}
-						</span>
-					</q-td>
-					<q-td key="created_at" :props="props">
-						{{ props.row.created_at }}
-					</q-td>
-					<q-td key="closed_at" :props="props">
-						{{ props.row.closed_at }}
-					</q-td>
-					<q-td key="actions" :props="props" class="action-col">
-						<q-icon
-							name="fa-solid fa-pen fa-lg"
-							class="action-col__btn-icon"
-							color="primary"
-							@click="router.push({ name: 'ticket-details', params: { ticket: props.row.id}})"
-							/>
-					</q-td>
-				</q-tr>
-			</template> -->
-
 		</q-table>
  </div>
 </template>

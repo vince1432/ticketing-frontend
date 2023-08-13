@@ -9,7 +9,11 @@ import Layout from './components/Layout.vue';
  type
  dashboard
  Users
- Module -->
+ Module
+ Nav
+ Sidbar
+ Release notes
+-->
   <div class="container">
     <Layout />
   </div>
