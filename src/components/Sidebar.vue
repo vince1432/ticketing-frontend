@@ -12,14 +12,37 @@
 					<q-item-section avatar>
 						<q-icon name="fa-solid fa-ticket fa-lg"/>
 					</q-item-section>
-
 					<q-item-section>
 						Tickets
 					</q-item-section>
 				</q-item>
+				<q-separator spaced />
+				<q-item clickable v-ripple :to="{ name: 'priority' }">
+					<q-item-section avatar>
+						<q-icon name="fa-solid fa-triangle-exclamation fa-lg"/>
+					</q-item-section>
+					<q-item-section>
+						Priority
+					</q-item-section>
+				</q-item>
+				<q-item clickable v-ripple :to="{ name: 'status' }">
+					<q-item-section avatar>
+						<q-icon name="fa-solid fa-list-check fa-lg"/>
+					</q-item-section>
+					<q-item-section>
+						Status
+					</q-item-section>
+				</q-item>
+				<q-item clickable v-ripple :to="{ name: 'module' }">
+					<q-item-section avatar>
+						<q-icon name="fa-solid fa-boxes-packing fa-lg"/>
+					</q-item-section>
+					<q-item-section>
+						Module
+					</q-item-section>
+				</q-item>
 			</q-list>
 		</q-scroll-area>
-
 		<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
 			<div class="absolute-bottom bg-transparent">
 				<q-avatar size="56px" class="q-mb-sm">

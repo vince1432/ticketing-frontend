@@ -4,7 +4,7 @@
 			bordered
 			:columns="columns"
 			separator="cell"
-			:rows="tickets"
+			:rows="data"
 			row-key="id"
 			dense
 			:loading="isLoading"
@@ -41,7 +41,7 @@ const childProps = defineProps({
     type: Array,
     required: true,
   },
-  tickets: {
+  data: {
     type: Array,
     required: true,
   },
@@ -56,14 +56,14 @@ const childProps = defineProps({
     default: {
 			descending: true,
 			page: 1,
-			rowPerPage: 0,
-			rowsNumber: 10
+			rowPerPage: 15,
+			rowsNumber: 15
 		},
   },
   rowsPerPageOption: {
     type: Array,
     required: false,
-    default: ['10',	'20',	'50','100',],
+    default: ['15',	'20',	'30',	'50','100',],
   },
   tableRequest: {
     type: Function,
@@ -81,7 +81,6 @@ const childProps = defineProps({
   },
 })
 
-console.log(childProps.addRouteName);
 const paginationUpdate = props => {
 	const { sortBy, descending, page, rowsPerPage, rowPerPage, rowsNumber } = props
 
@@ -91,12 +90,6 @@ const paginationUpdate = props => {
 	childProps.pagination.descending = descending
 	childProps.pagination.rowsNumber = rowsNumber
 	childProps.pagination.rowPerPage = rowPerPage
-}
-
-const emit = defineEmits(['update:text'])
-
-const update = (e) => {
-  emit('update:text', e.target.value)
 }
 </script>
 

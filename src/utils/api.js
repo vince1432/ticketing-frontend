@@ -42,3 +42,53 @@ export const getUsers = (count = 0, page = 0) => {
 
   return http.get(url)
 }
+
+// ---------- priority ------------//
+/**
+ * API call for priority list
+ *
+ * @param {number} [count=0] items to return
+ * @param {number} [page=0] page to start
+ * @return {Promise}
+ */
+export const getPriorities = (count = 0, page = 0) => {
+	let url = '/ticket-priority';
+	if(count && page)
+		url = url + `?page=${page}&item_count=${count}`;
+
+  return http.get(url)
+}
+
+
+// ---------- status ------------//
+/**
+ * API call for status list
+ *
+ * @param {number} [count=0] items to return
+ * @param {number} [page=0] page to start
+ * @return {Promise}
+ */
+export const getStatuses = (count = 0, page = 0) => {
+	let url = '/ticket-status';
+	if(count && page)
+		url = url + `?page=${page}&item_count=${count}`;
+
+  return http.get(url)
+}
+
+
+// ---------- module ------------//
+/**
+ * API call for module list
+ *
+ * @param {number} [count=0] items to return
+ * @param {number} [page=0] page to start
+ * @return {Promise}
+ */
+export const getModules = (count = 0, page = 0) => {
+	let url = '/module';
+	if(count && page)
+		url = url + `?page=${page}&item_count=${count}`;
+
+  return http.get(url)
+}

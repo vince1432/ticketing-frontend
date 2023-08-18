@@ -16,9 +16,33 @@
 			<div class="q-pa-md" style="width: 500px">
 				<q-select
 					filled
+					v-model="ticket.module_id"
+					:options="modules"
+					label="Module"
+					option-label="name"
+					option-value="id"
+					emit-value
+					map-options
+				/>
+			</div>
+			<div class="q-pa-md" style="width: 500px">
+				<q-select
+					filled
 					v-model="ticket.priority_id"
 					:options="ticketPriorities"
 					label="Priority"
+					option-label="name"
+					option-value="id"
+					emit-value
+					map-options
+				/>
+			</div>
+			<div class="q-pa-md" style="width: 500px">
+				<q-select
+					filled
+					v-model="ticket.status_id"
+					:options="statuses"
+					label="Status"
 					option-label="name"
 					option-value="id"
 					emit-value
@@ -59,19 +83,23 @@
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import apiError from '../../composables/apiErrorComposable';
+import loadingComposable from '../../composables/loadingComposable';
 import userComposable from '../../composables/userComposable';
-import { createTicket, getTicket, getTicketPriorities, updateTicket } from '../../utils/api';
+import { createTicket, getModules, getStatuses, getTicket, getTicketPriorities, updateTicket } from '../../utils/api';
 import { successToast } from '../../utils/quasarNotif';
 
 const route = useRoute();
 const router = useRouter();
 const { handle } = apiError();
+const { showLoading } = loadingComposable();
 const { users, updateUserList } = userComposable();
 
 const ticketID = route.params.ticket;
 let isCreate =  ref(route.path === '/ticket/create');
 let ticket = ref({});
 let ticketPriorities = ref([]);
+let statuses = ref([]);
+let modules = ref([]);
 let btnLoading = ref(false);
 let btnText = ref("Create");
 
@@ -80,11 +108,13 @@ btnText.value = (isCreate.value) ? 'Create' : 'Update';
 
 onMounted(() => {
 	// dont call if the page is for creating ticket
-	console.log('test');
-	if(!isCreate.value)
-		TicketDetails()
+	showLoading(true)
 	TicketPriorities()
 	updateUserList()
+	Statuses()
+	Modules()
+	if(!isCreate.value)
+		TicketDetails()
 })
 
 // send request
@@ -155,6 +185,9 @@ const TicketDetails = () => {
 			.catch(function ({ response }) {
 				handle(response)
 			})
+			.finally(function () {
+				showLoading(false)
+			})
 }
 
 // priority list
@@ -165,6 +198,30 @@ const TicketPriorities = () => {
 			})
 			.catch(function ({ response }) {
 				handle(response)
+			})
+}
+
+const Statuses = () => {
+	getStatuses()
+			.then(function ({ data }) {
+				statuses.value = data.data
+			})
+			.catch(function ({ response }) {
+				handle(response)
+			})
+}
+
+const Modules = () => {
+	getModules()
+			.then(function ({ data }) {
+				modules.value = data.data
+			})
+			.catch(function ({ response }) {
+				handle(response)
+			})
+			.finally(function () {
+				if(isCreate.value)
+					showLoading(false)
 			})
 }
 </script>

@@ -49,6 +49,30 @@ const routes = [
       requiresAuth: true
     },
   },
+  {
+    path: '/priority',
+    name: 'priority',
+    component: () => import('./../views/Priority/Priority.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/status',
+    name: 'status',
+    component: () => import('./../views/Status/Status.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/module',
+    name: 'module',
+    component: () => import('./../views/Module/Module.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
 ]
 
 const router = createRouter({

@@ -1,11 +1,8 @@
 <template>
-	<q-card class="search-panel q-pa-md">
-		<q-input rounded outlined v-model="text" label="Rounded outlined" />
-	</q-card>
 	<Table
-		title="Tickets"
+		title="Status"
 		:columns="columns"
-		:data="tickets"
+		:data="status"
 		:isLoading="isLoading"
 		:pagination="pagination"
 		:tableRequest="tableRequest"
@@ -16,19 +13,8 @@
 					<q-td key="id" :props="props">
 						{{ props.row.id }}
 					</q-td>
-					<q-td key="title" :props="props">
-						{{ props.row.title }}
-					</q-td>
-					<q-td key="assigned_to" :props="props">
-						<span v-if="props.row.assigned_to.name">
-							{{ props.row.assigned_to.name}}
-						</span>
-					</q-td>
-					<q-td key="created_at" :props="props">
-						{{ props.row.created_at }}
-					</q-td>
-					<q-td key="closed_at" :props="props">
-						{{ props.row.closed_at }}
+					<q-td key="name" :props="props">
+						{{ props.row.name }}
 					</q-td>
 					<q-td key="actions" :props="props" class="action-col">
 						<q-icon
@@ -47,12 +33,12 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Table from '../../components/Table.vue';
 import apiError from '../../composables/apiErrorComposable';
-import { getTickets } from '../../utils/api';
+import { getStatuses } from '../../utils/api';
 
 const router = useRouter();
 const { handle } = apiError();
 
-let tickets = ref([]);
+let status = ref([]);
 let isLoading = ref(false);
 let pagination = ref({
 	descending: true,
@@ -62,23 +48,20 @@ let pagination = ref({
 });
 
 const columns = [
-  { name: 'id', label: 'ID', align: 'center', field: row => row.id, sortable: true },
-  { name: 'title', label: 'title', align: 'left', field: row => row.title, sortable: true },
-  { name: 'assigned_to', label: 'Assignee', align: 'left', field: row => row.assigned_to.name, sortable: true },
-  { name: 'created_at', label: 'Opened At', align: 'left', field: row => row.created_at, style: 'width: 150px', sortable: true },
-  { name: 'closed_at', label: 'Closed At', align: 'left', field: row => row.closed_at, style: 'width: 150px', sortable: true },
+  { name: 'id', label: 'ID', align: 'center', field: row => row.id, sortable: true, style: 'width: 150px' },
+  { name: 'name', label: 'Name', align: 'left', field: row => row.name, sortable: true },
 	{ name: 'actions', align: 'center', label: 'Actions', field: row => row.id, style: 'width: 100px', sortable: false }
 ];
 
 onMounted(() => {
-	if(tickets.value.length === 0)
-		TicketList();
+	if(status.value.length === 0)
+		StatusList();
 })
 
 const tableRequest = (props) => {
 		const { page, rowsPerPage, sortBy, descending } = props.pagination
 
-		TicketList(rowsPerPage, page);
+		StatusList(rowsPerPage, page);
 		// update local pagination object
 		pagination.value.page = page
 		pagination.value.rowsPerPage = rowsPerPage
@@ -86,7 +69,7 @@ const tableRequest = (props) => {
 		pagination.value.descending = descending
 }
 
-const TicketList = (itemCount = 15, page = 1) => {
+const StatusList = (itemCount = 15, page = 1) => {
 	isLoading.value = true;
 
 	if(!itemCount)
@@ -94,9 +77,9 @@ const TicketList = (itemCount = 15, page = 1) => {
 	if(!page)
 		page = pagination.value.page;
 
-	getTickets(itemCount, page)
+	getStatuses(itemCount, page)
 		.then(function ({ data }) {
-				tickets.value = data.data
+				status.value = data.data
 				pagination.value.rowsNumber = data.total
 			})
 			.catch(function ({ response }) {
@@ -109,9 +92,5 @@ const TicketList = (itemCount = 15, page = 1) => {
 </script>
 
 <style lang="scss" scoped>
-.search-panel {
-	width: 97.9%;
-// 	margin: 10px 10px;
-// 	padding: 10px 20px;
-}
+
 </style>
