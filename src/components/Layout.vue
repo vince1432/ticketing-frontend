@@ -4,7 +4,7 @@
 			<Navbar @toggle:drawer="(val) => (DrawerOpen = val)"/>
 			<Sidebar v-if="token" :drawer="DrawerOpen"/>
 			<q-page-container >
-				<q-page padding class="window-height full-width column items-center">
+				<q-page padding class="window-height full-width">
 					<router-view></router-view>
 				</q-page>
 			</q-page-container>

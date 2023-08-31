@@ -10,7 +10,7 @@
 				Ticketing
 			</q-toolbar-title>
 			<div>
-				<q-tabs no-caps active-color="primary" indicator-color="transparent" class="text-grey-8" v-model="tab">
+				<q-tabs no-caps active-color="primary" indicator-color="transparent" class="text-grey-8">
 					<q-route-tab class="text-white" name="home" label="Home" :to="{ name: 'dashboard' }"/>
 					<q-route-tab class="text-white" name="about" label="About" :to="{ name: 'about' }"/>
 					<q-route-tab v-if="!token" class="text-white" name="login" label="Login" :to="{ name: 'login' }"/>

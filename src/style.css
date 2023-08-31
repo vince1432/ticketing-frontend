@@ -58,3 +58,7 @@ body {
 .table-top__button:hover {
 	cursor: pointer;
 }
+
+.search-input {
+	width: 200px;
+}

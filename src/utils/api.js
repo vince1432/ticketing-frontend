@@ -10,8 +10,16 @@ export const logout = () => {
 }
 
 // ---------- tickets ------------//
-export const getTickets = (count = 10, page = 1) => {
-  return http.get(`/ticket?page=${page}&item_count=${count}`)
+/**
+ * Ticket list axios request
+ *
+ * @param {number} [count=10] item count to be returned. For pagination
+ * @param {number} [page=1] offset of the result. For pagination
+ * @param {string} [$query=""] search parameters. Format: &key=value
+ * @return {Promise} axios request
+ */
+export const getTickets = (count = 10, page = 1, $query = "") => {
+  return http.get(`/ticket?page=${page}&item_count=${count}${$query}`)
 }
 
 export const getTicket = id => {
