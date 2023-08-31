@@ -2,7 +2,7 @@
 	<!-- SEARCH -->
 	<q-card class="q-pa-md q-mx-md">
 		<div class="row">
-			<div class="col-md-6 col-xs-12">
+			<div class="col-md-6 col-sm-6 col-xs-12">
 				<!-- SEARCH FILTER -->
 				<q-input
 					dense filled
@@ -11,7 +11,7 @@
 					class="q-ma-xs"
 				/>
 			</div>
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-3 col-sm-6 col-xs-12">
 				<!-- MODULE FILTER -->
 				<q-select
 					filled dense
@@ -34,7 +34,7 @@
 					</template>
 				</q-select>
 			</div>
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-3 col-sm-6 col-xs-12">
 				<!-- PRIORITY FILTER -->
 				<q-select
 					filled dense
@@ -57,9 +57,7 @@
 					</template>
 				</q-select>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-3 col-sm-6 col-xs-12">
 				<!-- STATUS FILTER -->
 				<q-select
 					filled dense
@@ -82,7 +80,7 @@
 					</template>
 				</q-select>
 			</div>
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-3 col-sm-6 col-xs-12">
 				<!-- ASSIGNED TO FILTER -->
 				<q-select
 					filled dense
@@ -105,7 +103,7 @@
 					</template>
 				</q-select>
 			</div>
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-3 col-sm-6 col-xs-12">
 				<!-- START DATE -->
 				<q-input filled dense v-model="search.start_date" mask="date" class="q-ma-xs" placeholder="Start Date">
 					<template v-slot:append>
@@ -125,7 +123,7 @@
 					</template>
 				</q-input>
 			</div>
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-3 col-sm-6 col-xs-12">
 				<!-- END DATE -->
 				<q-input filled dense v-model="search.end_date" mask="date" class="q-ma-xs" placeholder="End Date">
 					<template v-slot:append>
@@ -149,9 +147,7 @@
 		</div>
 		<div class="row justify-end q-mt-md">
 			<!-- SEARCH BUTTON -->
-			<div>
-				<q-btn rounded color="primary" label="Search" @click="Search" />
-			</div>
+			<q-btn rounded color="primary" label="Search" @click="Search" />
 		</div>
 	</q-card>
 	<!-- TABLE -->
