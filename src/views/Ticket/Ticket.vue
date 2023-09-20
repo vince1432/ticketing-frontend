@@ -145,9 +145,15 @@
 				</q-input>
 			</div>
 		</div>
-		<div class="row justify-end q-mt-md">
+		<div class="row reverse q-mt-md">
 			<!-- SEARCH BUTTON -->
-			<q-btn rounded color="primary" label="Search" @click="Search" />
+			<div class="col-lg-1 col-md-2 col-xs-12 ">
+				<q-btn rounded
+					color="primary"
+					label="Search"
+					@click="Search"
+					class="full-width"/>
+			</div>
 		</div>
 	</q-card>
 	<!-- TABLE -->
@@ -226,8 +232,6 @@ const dropdown = ref({
 	statuses: [],
 	users: [],
 });
-
-
 const columns = [
   { name: 'id', label: 'ID', align: 'center', field: row => row.id, sortable: true },
   { name: 'title', label: 'title', align: 'left', field: row => row.title, sortable: true },
@@ -292,48 +296,48 @@ const Search = () => {
 // priority list
 const Priorities = () => {
 	getTicketPriorities()
-			.then(function ({ data }) {
-				dropdown.value.priorities = data.data
-			})
-			.catch(function ({ response }) {
-				handle(response)
-			})
+		.then(function ({ data }) {
+			dropdown.value.priorities = data.data
+		})
+		.catch(function ({ response }) {
+			handle(response)
+		})
 }
 
 // status list
 const Statuses = () => {
 	getStatuses()
-			.then(function ({ data }) {
-				dropdown.value.statuses = data.data
-			})
-			.catch(function ({ response }) {
-				handle(response)
-			})
+		.then(function ({ data }) {
+			dropdown.value.statuses = data.data
+		})
+		.catch(function ({ response }) {
+			handle(response)
+		})
 }
 
 // modules list
 const Modules = () => {
 	getModules()
-			.then(function ({ data }) {
-				dropdown.value.modules = data.data
-			})
-			.catch(function ({ response }) {
-				handle(response)
-			})
-			.finally(function () {
+		.then(function ({ data }) {
+			dropdown.value.modules = data.data
+		})
+		.catch(function ({ response }) {
+			handle(response)
+		})
+		.finally(function () {
 
-			})
+		})
 }
 
 // user list
 const Users = () => {
 	getUsers()
-			.then(function ({ data }) {
-				dropdown.value.users = data.data
-			})
-			.catch(function ({ response }) {
-				handle(response)
-			})
+		.then(function ({ data }) {
+			dropdown.value.users = data.data
+		})
+		.catch(function ({ response }) {
+			handle(response)
+		})
 }
 
 // called on pagination updates
@@ -360,15 +364,15 @@ const TicketList = (itemCount = 15, page = 1, query = '') => {
 	// axios ticket list call
 	getTickets(itemCount, page, query)
 		.then(function ({ data }) {
-				tickets.value = data.data
-				pagination.value.rowsNumber = data.total
-			})
-			.catch(function ({ response }) {
-					handle(response)
-			})
-			.finally(function () {
-				isLoading.value = false;
-			})
+			tickets.value = data.data
+			pagination.value.rowsNumber = data.total
+		})
+		.catch(function ({ response }) {
+				handle(response)
+		})
+		.finally(function () {
+			isLoading.value = false;
+		})
 }
 
 </script>

@@ -62,3 +62,7 @@ body {
 .search-input {
 	width: 200px;
 }
+
+.bold {
+	font-weight: bold;
+}

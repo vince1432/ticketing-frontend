@@ -1,21 +1,28 @@
 <template>
-	<div class="q-pa-md" style="max-width: 400px">
+	<q-toolbar class="shadow-up-7 text-primary w-full">
+		<q-btn flat round dense icon="fa-solid fa-arrow-left" @click="router.push({ name: 'ticket' })"/>
+		<q-toolbar-title>
+			<div v-if="ticketID">Ticket #{{ ticketID }}</div>
+			<div v-else>New Ticket</div>
+		</q-toolbar-title>
+	</q-toolbar>
+	<div class="q-pa-md">
 		<q-form
 			@submit.prevent=""
-			class="q-gutter-md center column items-center"
+			class="row"
 		>
-			<div class="q-pa-md" style="width: 500px">
+			<div class="q-pa-md col-12">
 				<q-input
-					filled
+					filled dense
 					v-model="ticket.title"
 					label="Title *"
 					lazy-rules
 					:rules="[ val => val && val.length > 0 || 'Please add title']"
 				/>
 			</div>
-			<div class="q-pa-md" style="width: 500px">
+			<div class="q-pa-md col-6">
 				<q-select
-					filled
+					filled dense
 					v-model="ticket.module_id"
 					:options="modules"
 					label="Module"
@@ -25,9 +32,9 @@
 					map-options
 				/>
 			</div>
-			<div class="q-pa-md" style="width: 500px">
+			<div class="q-pa-md col-6">
 				<q-select
-					filled
+					filled dense
 					v-model="ticket.priority_id"
 					:options="ticketPriorities"
 					label="Priority"
@@ -35,11 +42,12 @@
 					option-value="id"
 					emit-value
 					map-options
+					:setOptionIndex="-1"
 				/>
 			</div>
-			<div class="q-pa-md" style="width: 500px">
+			<div class="q-pa-md col-6">
 				<q-select
-					filled
+					filled dense
 					v-model="ticket.status_id"
 					:options="statuses"
 					label="Status"
@@ -49,9 +57,9 @@
 					map-options
 				/>
 			</div>
-			<div class="q-pa-md" style="width: 500px">
+			<div class="q-pa-md col-6">
 				<q-select
-					filled
+					filled dense
 					v-model="ticket.assigned_to"
 					:options="users"
 					label="Assigned to"
@@ -61,15 +69,72 @@
 					map-options
 				/>
 			</div>
-			<div class="q-pa-md" style="width: 500px">
+			<div class="q-pa-md col-12">
 				<q-input
 					label="Summary"
 					v-model="ticket.summary"
-					filled
+					filled dense
 					type="textarea"
 				/>
 			</div>
-			<div class="q-gutter-md">
+			<!-- COMMENT SECTION -->
+			<div class="q-pa-md col-6" v-if="!isCreate">
+				<q-card class="my-card " flat bordered>
+					<q-card-section>
+						<!-- <div class="text-h6 q-mt-sm q-mb-xs">Comment:</div> -->
+						<div class="col-12">
+							<q-input
+								label="Comment"
+								v-model="comment"
+								filled dense
+								type="textarea"
+								rows="2"
+							/>
+							<div class="row reverse">
+								<q-btn
+									label="Save"
+									type="button"
+									color="primary"
+									:loading="btnLoading"
+									size="sm"
+									class="q-my-sm"
+									@click="CommentAdd()"/>
+							</div>
+						</div>
+						<div class="text-caption">
+							<q-scroll-area style="height: 200px;">
+								<hr>
+								<!-- COMMENTS -->
+								<div class="comment">
+									<div v-for="(comment, index) in comments" :key="index" class="q-pt-md">
+										<div class="comment__head">
+											<text class="bold">{{ comment.commenter.name }}</text>
+											<text class="comment_subhead q-pl-sm">{{ comment.id }}</text>
+											<text class="comment_subhead q-pl-sm">{{ comment.created_at }}</text>
+										</div>
+										<p>{{ comment.comment }}</p>
+									</div>
+									<div>
+									</div>
+								</div>
+
+								<!-- LOAD COMMENTS -->
+								<q-btn
+									v-if="canLoadComment"
+									color="grey"
+									text-color="black"
+									label="Load more comments..."
+									class="full-width q-mt-md"
+									size="sm"
+									dense
+									@click="Comments()"
+								/>
+							</q-scroll-area>
+						</div>
+					</q-card-section>
+				</q-card>
+			</div>
+			<div class="q-gutter-md col-12 row justify-center">
 				<q-btn :label="btnText" type="button" color="primary" :loading="btnLoading" @click="onSubmit()"/>
 				<!-- <q-btn v-if="btnText === 'Update'" label="Close" type="button" color="red" :loading="btnLoading" @click="TicketClose()"/> -->
 				<q-btn label="Cancel" type="button" color="negative" flat class="q-ml-sm" @click="router.push({ name: 'ticket' })"/>
@@ -77,15 +142,28 @@
 		</q-form>
 
 	</div>
+
+
+
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import apiError from '../../composables/apiErrorComposable';
 import loadingComposable from '../../composables/loadingComposable';
 import userComposable from '../../composables/userComposable';
-import { createTicket, getModules, getStatuses, getTicket, getTicketPriorities, updateTicket } from '../../utils/api';
+import {
+addComment,
+createTicket,
+getComments,
+getModules,
+getStatuses,
+getTicket,
+getTicketPriorities,
+updateComment,
+updateTicket
+} from '../../utils/api';
 import { successToast } from '../../utils/quasarNotif';
 
 const route = useRoute();
@@ -94,14 +172,21 @@ const { handle } = apiError();
 const { showLoading } = loadingComposable();
 const { users, updateUserList } = userComposable();
 
-const ticketID = route.params.ticket;
-let isCreate =  ref(route.path === '/ticket/create');
-let ticket = ref({});
-let ticketPriorities = ref([]);
-let statuses = ref([]);
-let modules = ref([]);
-let btnLoading = ref(false);
-let btnText = ref("Create");
+const $store = inject('$store')
+const activeUser = $store.getters.activeUser;
+
+const ticketID = ref(route.params.ticket);
+const commentPage = ref(1);
+const isCreate =  ref(route.path === '/ticket/create');
+const ticket = ref({});
+const ticketPriorities = ref([]);
+const statuses = ref([]);
+const modules = ref([]);
+const comments = ref([]);
+const btnLoading = ref(false);
+const btnText = ref("Create");
+const comment = ref("");
+const canLoadComment = ref(true);
 
 // set button text
 btnText.value = (isCreate.value) ? 'Create' : 'Update';
@@ -113,8 +198,10 @@ onMounted(() => {
 	updateUserList()
 	Statuses()
 	Modules()
-	if(!isCreate.value)
+	if(!isCreate.value) {
 		TicketDetails()
+		Comments()
+	}
 })
 
 // send request
@@ -124,7 +211,7 @@ const onSubmit = () => {
 	if(isCreate.value)
 		TicketAdd(ticket.value)
 	else
-		TicketUpdate(ticketID, ticket.value)
+		TicketUpdate(ticketID.value, ticket.value)
 }
 
 // ----------- tickets api call -----------//
@@ -137,6 +224,8 @@ const TicketAdd = (data) => {
 				isCreate.value = false
 				btnText.value = "Update"
 				successToast(`Ticket created successfuly`, `Ticket #${data.data.id}`)
+				ticketID.value = data.data.id;
+				canLoadComment.value = false;
 			})
 			.catch(function ({ response }) {
 				handle(response)
@@ -160,23 +249,9 @@ const TicketUpdate = (id, data) => {
 			});
 }
 
-// // ticket close
-// const TicketClose = (id) => {
-// 	closeTicket(id)
-// 			.then(function ({ data }) {
-// 				successToast("Ticket closed successfuly")
-// 			})
-// 			.catch(function (response) {
-// 				handle(response)
-// 			})
-// 			.finally(() => {
-// 				btnLoading.value = false;
-// 			});
-// }
-
 // ticket details
 const TicketDetails = () => {
-	getTicket(ticketID)
+	getTicket(ticketID.value)
 			.then(function ({ data }) {
 				ticket.value = data.data
 				ticket.value.priority_id = data.data.priority.id ?? ''
@@ -224,8 +299,51 @@ const Modules = () => {
 					showLoading(false)
 			})
 }
+
+const Comments = () => {
+	getComments(ticketID.value, commentPage.value, 5, 'created_at', 'desc')
+			.then(function ({ data }) {
+				comments.value.push(...data.data)
+				commentPage.value++;
+				// console.log(data);
+				if(!data.next_page_url)
+					canLoadComment.value = false
+			})
+			.catch(function ({ response }) {
+				handle(response)
+			})
+}
+
+const CommentAdd = () => {
+	addComment(ticketID.value, comment.value)
+			.then(function ({ data }) {
+				// add commenter
+				data.data.commenter = {
+					id: data.data.commenter_id,
+					name: activeUser.name
+				}
+
+				comments.value.unshift(data.data)
+			})
+			.catch(function ({ response }) {
+				handle(response)
+			})
+}
+
+const CommentUpdate = (id) => {
+	updateComment(id, commentPage.value)
+			.then(function ({ data }) {
+
+			})
+			.catch(function ({ response }) {
+				handle(response)
+			})
+}
 </script>
 
 <style lang="scss" scoped>
-
+.comment_subhead {
+	font-weight:lighter;
+	font-size: 10px;
+}
 </style>
