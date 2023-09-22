@@ -110,16 +110,16 @@ export const getUsers = (count = 0, page = 0) => {
  *
  * @param {number} [count=0] items to return
  * @param {number} [page=0] page to start
+ * @param {string} [$query=""] search parameters. Format: &key=value
  * @return {Promise}
  */
-export const getPriorities = (count = 0, page = 0) => {
+export const getPriorities = (count = 0, page = 0, $query = '') => {
 	let url = '/ticket-priority';
 	if(count && page)
-		url = url + `?page=${page}&item_count=${count}`;
+		url = url + `?page=${page}&item_count=${count}${$query}`;
 
   return http.get(url)
 }
-
 
 // ---------- status ------------//
 /**
@@ -127,12 +127,13 @@ export const getPriorities = (count = 0, page = 0) => {
  *
  * @param {number} [count=0] items to return
  * @param {number} [page=0] page to start
+ * @param {string} [$query=""] search parameters. Format: &key=value
  * @return {Promise}
  */
-export const getStatuses = (count = 0, page = 0) => {
+export const getStatuses = (count = 0, page = 0, $query = '') => {
 	let url = '/ticket-status';
 	if(count && page)
-		url = url + `?page=${page}&item_count=${count}`;
+		url = url + `?page=${page}&item_count=${count}${$query}`;
 
   return http.get(url)
 }
@@ -144,12 +145,13 @@ export const getStatuses = (count = 0, page = 0) => {
  *
  * @param {number} [count=0] items to return
  * @param {number} [page=0] page to start
+ * @param {string} [$query=""] search parameters. Format: &key=value
  * @return {Promise}
  */
-export const getModules = (count = 0, page = 0) => {
+export const getModules = (count = 0, page = 0, $query = '') => {
 	let url = '/module';
 	if(count && page)
-		url = url + `?page=${page}&item_count=${count}`;
+		url = url + `?page=${page}&item_count=${count}${$query}`;
 
   return http.get(url)
 }

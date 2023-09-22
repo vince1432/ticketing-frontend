@@ -44,10 +44,11 @@ const { handle } = apiError();
 let priorities = ref([]);
 let isLoading = ref(false);
 let pagination = ref({
-	descending: true,
 	page: 1,
 	rowPerPage: 0,
-	rowsNumber: 10
+	rowsNumber: 10,
+	sortBy: 'id',
+	descending: true,
 });
 
 const columns = [
@@ -63,9 +64,17 @@ onMounted(() => {
 })
 
 const tableRequest = (props) => {
-		const { page, rowsPerPage, sortBy, descending } = props.pagination
+	const { page, rowsPerPage, sortBy, descending } = props.pagination
 
-		PriorityList(rowsPerPage, page);
+	// set query parameters for search
+	let query = "";
+	// set sort
+	const sort_dir = (descending) ? 'desc' : 'asc';
+
+	if(sortBy)
+		query += `&sort_by=${sortBy}&sort_dir=${sort_dir}`;
+
+		PriorityList(rowsPerPage, page, query);
 		// update local pagination object
 		pagination.value.page = page
 		pagination.value.rowsPerPage = rowsPerPage
@@ -73,7 +82,7 @@ const tableRequest = (props) => {
 		pagination.value.descending = descending
 }
 
-const PriorityList = (itemCount = 15, page = 1) => {
+const PriorityList = (itemCount = 15, page = 1, query = '') => {
 	isLoading.value = true;
 
 	if(!itemCount)
@@ -81,7 +90,7 @@ const PriorityList = (itemCount = 15, page = 1) => {
 	if(!page)
 		page = pagination.value.page;
 
-	getPriorities(itemCount, page)
+	getPriorities(itemCount, page, query)
 		.then(function ({ data }) {
 				priorities.value = data.data
 				pagination.value.rowsNumber = data.total

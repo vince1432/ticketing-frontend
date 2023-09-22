@@ -41,10 +41,11 @@ const { handle } = apiError();
 let status = ref([]);
 let isLoading = ref(false);
 let pagination = ref({
-	descending: true,
 	page: 1,
 	rowPerPage: 0,
-	rowsNumber: 10
+	rowsNumber: 10,
+	sortBy: 'id',
+	descending: true,
 });
 
 const columns = [
@@ -59,17 +60,25 @@ onMounted(() => {
 })
 
 const tableRequest = (props) => {
-		const { page, rowsPerPage, sortBy, descending } = props.pagination
+	const { page, rowsPerPage, sortBy, descending } = props.pagination
 
-		StatusList(rowsPerPage, page);
-		// update local pagination object
-		pagination.value.page = page
-		pagination.value.rowsPerPage = rowsPerPage
-		pagination.value.sortBy = sortBy
-		pagination.value.descending = descending
+	// set query parameters for search
+	let query = "";
+	// set sort
+	const sort_dir = (descending) ? 'desc' : 'asc';
+
+	if(sortBy)
+		query += `&sort_by=${sortBy}&sort_dir=${sort_dir}`;
+
+	StatusList(rowsPerPage, page, query);
+	// update local pagination object
+	pagination.value.page = page
+	pagination.value.rowsPerPage = rowsPerPage
+	pagination.value.sortBy = sortBy
+	pagination.value.descending = descending
 }
 
-const StatusList = (itemCount = 15, page = 1) => {
+const StatusList = (itemCount = 15, page = 1, query = '') => {
 	isLoading.value = true;
 
 	if(!itemCount)
@@ -77,7 +86,7 @@ const StatusList = (itemCount = 15, page = 1) => {
 	if(!page)
 		page = pagination.value.page;
 
-	getStatuses(itemCount, page)
+	getStatuses(itemCount, page, query)
 		.then(function ({ data }) {
 				status.value = data.data
 				pagination.value.rowsNumber = data.total

@@ -41,10 +41,11 @@ const { handle } = apiError();
 let module = ref([]);
 let isLoading = ref(false);
 let pagination = ref({
-	descending: true,
 	page: 1,
 	rowPerPage: 0,
-	rowsNumber: 10
+	rowsNumber: 10,
+	sortBy: 'id',
+	descending: true,
 });
 
 const columns = [
@@ -59,17 +60,25 @@ onMounted(() => {
 })
 
 const tableRequest = (props) => {
-		const { page, rowsPerPage, sortBy, descending } = props.pagination
+	const { page, rowsPerPage, sortBy, descending } = props.pagination
 
-		ModuleList(rowsPerPage, page);
-		// update local pagination object
-		pagination.value.page = page
-		pagination.value.rowsPerPage = rowsPerPage
-		pagination.value.sortBy = sortBy
-		pagination.value.descending = descending
+	// set query parameters for search
+	let query = "";
+	// set sort
+	const sort_dir = (descending) ? 'desc' : 'asc';
+
+	if(sortBy)
+		query += `&sort_by=${sortBy}&sort_dir=${sort_dir}`;
+
+	ModuleList(rowsPerPage, page, query);
+	// update local pagination object
+	pagination.value.page = page
+	pagination.value.rowsPerPage = rowsPerPage
+	pagination.value.sortBy = sortBy
+	pagination.value.descending = descending
 }
 
-const ModuleList = (itemCount = 15, page = 1) => {
+const ModuleList = (itemCount = 15, page = 1, query = '') => {
 	isLoading.value = true;
 
 	if(!itemCount)
@@ -77,7 +86,7 @@ const ModuleList = (itemCount = 15, page = 1) => {
 	if(!page)
 		page = pagination.value.page;
 
-	getModules(itemCount, page)
+	getModules(itemCount, page, query)
 		.then(function ({ data }) {
 				module.value = data.data
 				pagination.value.rowsNumber = data.total

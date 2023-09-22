@@ -1,6 +1,6 @@
 <template>
 	<!-- SEARCH -->
-	<q-card class="q-pa-md q-mx-md">
+	<q-card class="q-pa-md q-ma-md">
 		<div class="row">
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<!-- SEARCH FILTER -->
@@ -176,15 +176,27 @@
 						{{ props.row.title }}
 					</q-td>
 					<q-td key="assigned_to" :props="props">
-						<span v-if="props.row.assigned_to.name">
+						<span v-if="props.row.assigned_to">
 							{{ props.row.assigned_to.name}}
+						</span>
+					</q-td>
+					<q-td key="priority_id" :props="props">
+						<span v-if="props.row.priority">
+							{{ props.row.priority.name}}
+						</span>
+					</q-td>
+					<q-td key="status_id" :props="props">
+						<span v-if="props.row.status">
+							{{ props.row.status.name}}
+						</span>
+					</q-td>
+					<q-td key="module_id" :props="props">
+						<span v-if="props.row.module">
+							{{ props.row.module.name}}
 						</span>
 					</q-td>
 					<q-td key="created_at" :props="props">
 						{{ props.row.created_at }}
-					</q-td>
-					<q-td key="closed_at" :props="props">
-						{{ props.row.closed_at }}
 					</q-td>
 					<q-td key="actions" :props="props" class="action-col">
 						<q-icon
@@ -212,10 +224,11 @@ const isLoading = ref(false);
 const endDatePopUp = ref(false);
 const startDatePopUp = ref(false);
 const pagination = ref({
-	descending: true,
 	page: 1,
 	rowPerPage: 0,
-	rowsNumber: 10
+	rowsNumber: 10,
+	sortBy: 'id',
+	descending: true,
 });
 const search = ref({
 	search: '',
@@ -234,11 +247,13 @@ const dropdown = ref({
 });
 const columns = [
   { name: 'id', label: 'ID', align: 'center', field: row => row.id, sortable: true },
-  { name: 'title', label: 'title', align: 'left', field: row => row.title, sortable: true },
-  { name: 'assigned_to', label: 'Assignee', align: 'left', field: row => row.assigned_to.name, sortable: true },
-  { name: 'created_at', label: 'Opened At', align: 'left', field: row => row.created_at, style: 'width: 150px', sortable: true },
-  { name: 'closed_at', label: 'Closed At', align: 'left', field: row => row.closed_at, style: 'width: 150px', sortable: true },
-	{ name: 'actions', align: 'center', label: 'Actions', field: row => row.id, style: 'width: 100px', sortable: false }
+  { name: 'title', label: 'TITTLE', align: 'left', field: row => row.title, sortable: true },
+  { name: 'assigned_to', label: 'ASSIGNEE', align: 'left', field: row => row.assigned_to.name, sortable: true },
+  { name: 'priority_id', label: 'PRIORITY', align: 'left', sortable: true },
+  { name: 'status_id', label: 'STATUS', align: 'left', sortable: true },
+  { name: 'module_id', label: 'MODULE', align: 'left', sortable: true },
+  { name: 'created_at', label: 'OPENED AT', align: 'left', field: row => row.created_at, style: 'width: 150px', sortable: true },
+	{ name: 'actions', align: 'center', label: 'ACTIONS', field: row => row.id, style: 'width: 100px', sortable: false }
 ];
 
 onMounted(() => {
@@ -272,24 +287,7 @@ const Search = () => {
 		pagination: { page, rowsPerPage, sortBy, descending }
 	}
 
-	// set query parameters for search
-	let query = "";
-	if(search.value.search)
-		query += "&search=" + search.value.search;
-	if(search.value.module)
-		query += "&module=" + search.value.module;
-	if(search.value.priority)
-		query += "&priority=" + search.value.priority;
-	if(search.value.status)
-		query += "&status=" + search.value.status;
-	if(search.value.assigned)
-		query += "&assigned=" + search.value.assigned;
-	if(search.value.start_date)
-		query += "&start_date=" + search.value.start_date;
-	if(search.value.end_date)
-		query += "&end_date=" + search.value.end_date;
-
-	tableRequest(props, query)
+	tableRequest(props)
 }
 
 // dropdowns
@@ -341,8 +339,30 @@ const Users = () => {
 }
 
 // called on pagination updates
-const tableRequest = (props, query = '') => {
+const tableRequest = (props) => {
 		const { page, rowsPerPage, sortBy, descending } = props.pagination
+
+	// set query parameters for search
+	let query = "";
+	// set sort
+	const sort_dir = (descending) ? 'desc' : 'asc';
+
+	if(search.value.search)
+		query += "&search=" + search.value.search;
+	if(search.value.module)
+		query += "&module=" + search.value.module;
+	if(search.value.priority)
+		query += "&priority=" + search.value.priority;
+	if(search.value.status)
+		query += "&status=" + search.value.status;
+	if(search.value.assigned)
+		query += "&assigned=" + search.value.assigned;
+	if(search.value.start_date)
+		query += "&start_date=" + search.value.start_date;
+	if(search.value.end_date)
+		query += "&end_date=" + search.value.end_date;
+	if(sortBy)
+		query += `&sort_by=${sortBy}&sort_dir=${sort_dir}`;
 
 		TicketList(rowsPerPage, page, query);
 		// update local pagination object
