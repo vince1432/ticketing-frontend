@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+   frontend:
+    container_name: ticketing-frontend
+    build: ./
+    volumes:
+      - ./:/var/www/html/ticketing-frontend
+      - /var/www/html/ticketing-frontend/node_modules
+    ports:
+      - 3000:3000
+    stdin_open: true

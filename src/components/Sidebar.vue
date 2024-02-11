@@ -41,6 +41,32 @@
 						Module
 					</q-item-section>
 				</q-item>
+				<q-item clickable v-ripple :to="{ name: 'user' }">
+					<q-item-section avatar>
+						<q-icon name="fa-solid fa-users-line fa-lg"/>
+					</q-item-section>
+					<q-item-section>
+						Users
+					</q-item-section>
+				</q-item>
+				<div class="absolute-bottom">
+					<q-item clickable v-ripple :to="{ name: 'user' }">
+						<q-item-section avatar>
+							<q-icon name="fa-solid fa-gear fa-lg"/>
+						</q-item-section>
+						<q-item-section>
+							Settings
+						</q-item-section>
+					</q-item>
+					<q-item clickable v-ripple @click="logout">
+						<q-item-section avatar>
+							<q-icon name="fa-solid fa-right-from-bracket fa-lg"/>
+						</q-item-section>
+						<q-item-section>
+							Logout
+						</q-item-section>
+					</q-item>
+				</div>
 			</q-list>
 		</q-scroll-area>
 		<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
@@ -57,8 +83,11 @@
 
 <script setup>
 import { inject } from 'vue';
+import { useRouter } from 'vue-router';
 
 const $store = inject('$store')
+const router = useRouter();
+
 const activeUser = $store.getters.activeUser;
 
 const props = defineProps({
@@ -68,6 +97,14 @@ const props = defineProps({
     default: true,
   },
 });
+
+const logout = () => {
+	$store.dispatch('logout');
+	router.push({ name: 'login' });
+	localStorage.removeItem("token");
+	localStorage.removeItem("refresh_token");
+}
+
 </script>
 
 <style lang="scss" scoped>

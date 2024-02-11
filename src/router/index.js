@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/',
     name: 'dashboard',
-    component: () => import('./../views/Home.vue'),
+    component: () => import('@views/Home.vue'),
 		meta: {
       requiresAuth: true
     }
@@ -12,7 +12,7 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    component: () => import('./../views/About.vue'),
+    component: () => import('@views/About.vue'),
 		meta: {
       requiresAuth: true
     },
@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('./../views/Login.vue'),
+    component: () => import('@views/Login.vue'),
 		meta: {
       hideForAuth: true
     },
@@ -28,7 +28,7 @@ const routes = [
   {
     path: '/ticket',
     name: 'ticket',
-    component: () => import('./../views/Ticket/Ticket.vue'),
+    component: () => import('@views/Ticket/Ticket.vue'),
 		meta: {
       requiresAuth: true
     },
@@ -36,7 +36,7 @@ const routes = [
   {
     path: '/ticket/:ticket',
     name: 'ticket-details',
-    component: () => import('./../views/Ticket/TicketDetails.vue'),
+    component: () => import('@views/Ticket/TicketDetails.vue'),
 		meta: {
       requiresAuth: true
     },
@@ -44,7 +44,7 @@ const routes = [
   {
     path: '/ticket/create',
     name: 'ticket-create',
-    component: () => import('./../views/Ticket/TicketDetails.vue'),
+    component: () => import('@views/Ticket/TicketDetails.vue'),
 		meta: {
       requiresAuth: true
     },
@@ -52,7 +52,7 @@ const routes = [
   {
     path: '/priority',
     name: 'priority',
-    component: () => import('./../views/Priority/Priority.vue'),
+    component: () => import('@views/Priority/Priority.vue'),
 		meta: {
       requiresAuth: true
     },
@@ -60,7 +60,7 @@ const routes = [
   {
     path: '/status',
     name: 'status',
-    component: () => import('./../views/Status/Status.vue'),
+    component: () => import('@views/Status/Status.vue'),
 		meta: {
       requiresAuth: true
     },
@@ -68,7 +68,31 @@ const routes = [
   {
     path: '/module',
     name: 'module',
-    component: () => import('./../views/Module/Module.vue'),
+    component: () => import('@views/Module/Module.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: () => import('@views/User/User.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/user/:user',
+    name: 'user-details',
+    component: () => import('@views/User/UserDetails.vue'),
+		meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/user/create',
+    name: 'user-create',
+    component: () => import('@views/User/UserDetails.vue'),
 		meta: {
       requiresAuth: true
     },

@@ -96,13 +96,45 @@ export const getTicketPriorities = () => {
 }
 
 // ---------- users ------------//
-export const getUsers = (count = 0, page = 0) => {
+export const getUsers = (count = 0, page = 0, $query = '') => {
 	let url = '/user';
 	if(count && page)
-		url = url + `?page=${page}&item_count=${count}`;
+		url = url + `?page=${page}&item_count=${count}${$query}`;
 
   return http.get(url)
 }
+
+/**
+ * Get User details
+ *
+ * @param {number} id user id
+ * @return {Promise} axios request
+ */
+export const getUser = id => {
+  return http.get(`/user/${id}`)
+}
+
+/**
+ * Add new user
+ *
+ * @param {FormData} data
+ * @return {Promise}
+ */
+export const addUser = (data) => {
+  return http.post(`/user`, data, { headers: { "Content-Type": "multipart/form-data" } })
+}
+
+/**
+ * Get User details
+ *
+ * @param {number} id user id
+ * @param {FormData} data
+ * @return {Promise} axios request
+ */
+export const updateUser = (id, data) => {
+  return http.patch(`/user/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } })
+}
+/**
 
 // ---------- priority ------------//
 /**

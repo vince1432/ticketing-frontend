@@ -1,7 +1,7 @@
 <template>
   <q-header elevated class="bg-primary text-white">
 		<q-toolbar>
-			<q-btn dense flat round icon="menu" @click="toggleDrawer" />
+			<q-btn v-if="route.name !== 'login'" dense flat round icon="menu" @click="toggleDrawer" />
 
 			<q-toolbar-title>
 				<q-avatar>
@@ -23,6 +23,9 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const token = ref(localStorage.getItem("token"));
 let drawer = ref(true);

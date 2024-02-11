@@ -2,7 +2,7 @@
   <div>
 		<q-layout>
 			<Navbar @toggle:drawer="(val) => (DrawerOpen = val)"/>
-			<Sidebar v-if="token" :drawer="DrawerOpen"/>
+			<Sidebar v-if="route.name !== 'login'" :drawer="DrawerOpen"/>
 			<q-page-container >
 				<!-- <q-page padding class="window-height full-width"> -->
 					<router-view></router-view>
@@ -14,10 +14,11 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import Navbar from './Navbar.vue';
 import Sidebar from './Sidebar.vue';
 
-const token = ref(localStorage.getItem("token"));
+const route = useRoute();
 const DrawerOpen = ref(true)
 
 </script>
